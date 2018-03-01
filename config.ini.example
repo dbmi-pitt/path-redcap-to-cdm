@@ -24,22 +24,14 @@ redcap_project_info = [{'project_name': 'IPF', 'api_key':'1111111111111111111111
                        {'project_name': 'A Fib', 'api_key':'22222222222222222222222222222222','site_project_id':'2001','path_project_id':'1001'},
                        {'project_name': 'Weight', 'api_key':'33333333333333333333333333333333','site_project_id':'2002','path_project_id':'1002'}] 
 
-
 upload_id = 2
 
-ignore_fields = {
-                '1000': ["record_id", "pcode_1", "pcode_1_incorrect", "pcode_2", "eligibility_instructions", "consent_form_download",
-                "consent_quiz_2", "consent_quiz_3", "consent_quiz_score", "consent_1", "consent_2", "consent_3", "consent_4", "consent_5",
-                "id_contact_instructions", "id_01", "id_02", "id_03", "id_04", "id_05a", "id_06a", "id_08", "id_09", "id_10", "id_11", "id_12",
-                "id_13", "e_mail_validation", "error_msg", "id_14", "id_15" "id_16", "id_17", "id_18", "demographics_instructions", "dem1_2a",
-                "dem1_3a"],
-                '1001' : ["record_id", "consent_form_download", "consent_quiz_instructions", "consent_quiz_1_correct", "consent_quiz_1_wrong",
-                "consent_quiz_2_correct", "consent_quiz_2_wrong", "consent_quiz_3_wrong", "consent_2", "consent_3", "consent_4", "consent_5", "id_contact_instructions",
-                "id_01", "id_02", "id_03", "id_05a", "id_06a", "id_08", "id_09", "id_10", "id_11", "id_12", "id_13", "e_mail_validation", "error_msg", "id_14",
-                "id_15", "id_16", "id_17", "id_18", "med_warning", "applied_cog_instrutions", "dem1_1", "dem1_2a", "dem1_3a", "dem1_5", "dem1_6", "dem3_3a",
-                "part_2a", "completion_02", ],
-                '1002' : [] }
+load_text_fields = False
 
 redcap_version = 6.15.13
 verify_ssl=True
 lazy=False
+
+#Set the logging level to one of these options: ERROR, WARNING, INFO, DEBUG
+logging_level=ERROR
+
