@@ -1,16 +1,17 @@
 [DATABASE]
+# set the dbms flag to either 'Oracle' or 'SQLServer'
 dbms = Oracle
 host = 
 port = 1521
+dbuser =  
+dbpassword =  
+
 # For Oracle only
 sid =  
  
 # for SQL Server only
 dbname = 
-dbuser =  
-dbpassword =  
 
- 
 event_mapping_table = REDCAP_EVENT_MAPPING
 answer_mapping_table = REDCAP_ANSWER_MAPPING
 patient_mapping_table = REDCAP_PATIENT_MAPPING
@@ -24,11 +25,8 @@ redcap_project_info = [{'project_name': 'IPF', 'api_key':'1111111111111111111111
                        {'project_name': 'A Fib', 'api_key':'22222222222222222222222222222222','site_project_id':'2001','path_project_id':'1001'},
                        {'project_name': 'Weight', 'api_key':'33333333333333333333333333333333','site_project_id':'2002','path_project_id':'1002'}] 
 
-upload_id = 2
-
 load_text_fields = False
 
-redcap_version = 6.15.13
 verify_ssl=True
 lazy=False
 

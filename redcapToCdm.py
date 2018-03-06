@@ -34,7 +34,7 @@ dictDatabaseSettings = {'dbms' : None, 'host' : None, 'port' : None, 'sid': None
 #initialize a dictionary with all the variables relating to the REDCAP section
 #This allows the code to loop through the section while loading the variables into the dictionary
 dictRedcapSettings = {'api_url' : None, 'redcap_project_info' : None, 'verify_ssl' : True, 'lazy' : False, 
-                      'redcap_version' : None, 'load_text_fields' : False, 'logging_level' : 'INFO'}
+                       'load_text_fields' : False, 'logging_level' : 'INFO'}
 
 # a dictionary to manage the data types found in the pro_cm table
 dictPROCMTableDataTypes = {'pro_date' : 'date', 'pro_response_num' : 'number', 'pro_measure_score' : 'number', 'pro_measure_theta' : 'number',
@@ -144,7 +144,7 @@ def checkConfigSettings(dictDatabaseSettings, dictRedcapSettings):
         if dictDatabaseSettings['dbname'] == None or len(dictDatabaseSettings['dbname']) == 0:
             raise Exception('Missing {0} entry in config.ini file.  Please reference the config.ini.example file and set the {1} entry in your config.ini file'.format('dbname','dbname'))
             
-    generalRedcapList = ['api_url', 'redcap_version', 'verify_ssl', 'lazy', 'load_text_fields', 'redcap_project_info', 'logging_level' ]
+    generalRedcapList = ['api_url', 'verify_ssl', 'lazy', 'load_text_fields', 'redcap_project_info', 'logging_level' ]
     for gs in generalRedcapList:
         if dictRedcapSettings[gs] == None or len(dictRedcapSettings[gs]) == 0:
             raise Exception('Missing {0} entry in config.ini file.  Please reference the config.ini.example file and set the {1} entry in your config.ini file'.format(gs,gs))
@@ -291,6 +291,8 @@ def loadCodesByFormDatabase(dbobj, projectid, formname, redcapProject):
             if field_type == 'radio' or field_type == 'checkbox' or field_type == 'yesno':
                 if answer_text == 'No Response':
                     dictKey = field_name + ':NORESPONSE'
+                    #remove the "No Response" answer since the user didn't specify that.  "No Response" comes from the REDCAP_ANSWER_MAPPING table
+                    answer_text = None
                 else:
                     if field_type == 'yesno':
                         strAnswerNum = '0'
@@ -408,6 +410,8 @@ def loadResponses(dbobj, listResponses, dictFormAnswerMap):
 
 def writeCDMData(dbobj, listCDMData):
     for dataItem in listCDMData:
+        if dataItem.has_key('path_code') == False or dataItem['path_code'] == None or dataItem['path_code'] == '':
+            print "Here"
         sqlStmt = "INSERT INTO {0} (".format(dictDatabaseSettings['pro_cm_table'])
         for key in dataItem.keys():
             sqlStmt = sqlStmt + key + ", "
@@ -584,7 +588,7 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
                 else:
                     dictCDMRecord['pro_response_date'] = extractDate(fieldItem['field_value'])
             # handle situation where the participant did not respond
-            elif fieldItem.has_key('field_value') == False:
+            elif dictCDMRecord.has_key('path_code') == False:
                 dictCDMRecord['path_code'] = str(answerMap['concept_code'])
             #if fieldItem['field_value'] != 'NORESPONSE':
             #    dictCDMRecord['pro_response_num'] = cleanText(fieldItem['field_value'])
