@@ -30,16 +30,16 @@ and populate these tables are found in the /sql_files directory.
 #### event_mapping_table
 The event_mapping_table must exist and be populated *before* the python code is run.  
 This table is created by the sql_files/create_event_mapping_table_oracle.sql script (Oracle only).  You 
-populate this table using either Rsql_files/EDCAP_EVENT_MAPPING.csv or sql_files/REDCAP_EVENT_MAPPING.sql (Oracle only).
+populate this table using either sql_files/EDCAP_EVENT_MAPPING.csv or sql_files/REDCAP_EVENT_MAPPING.sql (Oracle only).
 These files contain a default set of data.  After you populate the table, make sure all the unique_event_name
- and arm_num data matches your REDCap data dictionary.
+ and arm_num data in REDCAP_EVENT_MAPPING matches your REDCap data dictionary.
 
 #### answer_mapping_table
 The answer_mapping_table must exist and be populated *before* the python code is run.
 This table is created by the sql_files/create_answer_mapping_table_oracle.sql script (Oracle only).  You 
 populate this table using either sql_files/REDCAP_ANSWER_MAPPING.csv or sql_files/REDCAP_ANSWER_MAPPING.sql (Oracle only).
 These files contain a default set of data.  After you populate the table, make sure all the form_name
- and field_name data matches your REDCap data dictionary.
+ and field_name data in REDCAP_ANSWER_MAPPING matches your REDCap data dictionary.
 
 #### patient_mapping_table
 The patient_mapping_table must exist and be populated *before* the python code is run.  
