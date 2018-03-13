@@ -119,12 +119,10 @@ For each project supply the following information: site_project_id and api_key.
 http://redi.readthedocs.org/en/latest/add_new_redcap_project.html
 
 #### load_text_fields
-A boolean indicating if you want to process all the available text fields from REDCap.  True means, write the text data to the pro_cm_table.  False means do not write
-text data to pro_cm_table.     
+A boolean indicating if you want to process all the available text fields from REDCap.  True means, write the text data to the pro_cm_table.  False means do not write text data to pro_cm_table.  Suggested value for this setting is ```False```.   
 
 #### verify_ssl
-A boolean indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how your REDCap server's API is configured and its firewall rules.  
-This flag is found in the third party REDCap python code.
+A boolean indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how your REDCap server's API is configured and its firewall rules.  Suggested value for this setting is ```True```.
 
 #### lazy
 A boolean indicating if the third party REDCap code should fetch data in a lazy manner.  True indicates the data from the REDCap server should only 
