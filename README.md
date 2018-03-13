@@ -13,12 +13,43 @@ and loads them into PCORI CDM 4.0.  It performs three overall tasks:
 ## Install all the python dependencies
 ---
 
-The code requires a python interface to RedCap called PyCap.  PyCap has a dependency called Requests.
+The code requires a python interface to REDCap called PyCap.  PyCap has a dependency called Requests.
 These dependencies can be installed individually or using the requirements.txt file in a 'pip install' command:
 
 ```
 pip install -r requirements.txt 
 ```
+
+## Update Database
+---
+
+The REDCap python code assumes certain tables exist and are populated before they are run.
+These tables are referenced in the config.ini (see below).  These file to help create
+and populate these tables are found in the /sql_files directory.
+
+#### event_mapping_table
+The event_mapping_table must exist and be populated *before* the python code is run.  
+This table is created by the sql_files/create_event_mapping_table_oracle.sql script (Oracle only).  You 
+populate this table using either REDCAP_EVENT_MAPPING.csv or REDCAP_EVENT_MAPPING.sql (Oracle only).
+These files contain a default set of data.  After you populate the table, make sure all the unique_event_name
+ and arm_num data matches your REDCap data dictionary.
+
+#### answer_mapping_table
+The answer_mapping_table must exist and be populated *before* the python code is run.
+This table is created by the sql_files/create_answer_mapping_table_oracle.sql script (Oracle only).  You 
+populate this table using either REDCAP_ANSWER_MAPPING.csv or REDCAP_ANSWER_MAPPING.sql (Oracle only).
+These files contain a default set of data.  After you populate the table, make sure all the form_name
+ and field_name data matches your REDCap data dictionary.
+
+#### patient_mapping_table
+The patient_mapping_table must exist and be populated *before* the python code is run.  
+This table is created by the sql_files/create_redcap_patient_mapping_table_oracle.sql script (Oracle only).
+You must map the REDCap record_id values to your PATID in your CDM DEMOGRAPHIC table.
+
+#### pro_cm_table
+This is the name of the CDM 4.0 PRO_CM table in your CDM schema.  Typically this is 'PRO_CM'.  The data from the python scripts 
+will be written to this table.  This table is created by the sql_files/create_pro_cm_table_oracle.sql script (Oracle only).
+
 ## config.ini
 ---
 
@@ -55,19 +86,19 @@ The dbname for the SQL Server database.  This setting only applies to SQL Server
 
 #### event_mapping_table
 This is the name of the event_mapping_table in the database specified above.  The event_mapping_table must
-exist and be populated *before* the python code is run.  This table is populated by the create_event_mapping_table.sql script.
+exist and be populated *before* the python code is run.  
 
 #### answer_mapping_table
 This is the name of the answer_mapping_table in the database specified above.  The answer_mapping_table must
-exist and be populated *before* the python code is run.  This table is populated by the create_answer_mapping_table.sql script.
+exist and be populated *before* the python code is run.  
 
 #### patient_mapping_table
 This is the name of the patient_mapping_table in the database specified above.  The patient_mapping_table must
-exist and be populated *before* the python code is run.  This table's schema is created by the create_patient_mapping_table.sql.
+exist and be populated *before* the python code is run.  .
 You must map the REDCap record_id values to your PATID in your CDM DEMOGRAPHIC table.
 
 #### pro_cm_table
-This is the name of the CDM 4.0 PRO_CM table in your CDM schema.  Typically this is 'PRO_CM'.  The data from the python scripts 
+This is the name of the CDM 4.0 PRO_CM table in your CDM schema.  It should be called 'PRO_CM'.  The data from the python scripts 
 will be written to this table.
 
 ### REDCap Settings
