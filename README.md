@@ -30,16 +30,16 @@ and populate these tables are found in the /sql_files directory.
 #### event_mapping_table
 The event_mapping_table must exist and be populated *before* the python code is run.  
 This table is created by the sql_files/create_event_mapping_table_oracle.sql script (Oracle only).  You 
-populate this table using either REDCAP_EVENT_MAPPING.csv or REDCAP_EVENT_MAPPING.sql (Oracle only).
+populate this table using either sql_files/REDCAP_EVENT_MAPPING.csv or sql_files/REDCAP_EVENT_MAPPING.sql (Oracle only).
 These files contain a default set of data.  After you populate the table, make sure all the unique_event_name
- and arm_num data matches your REDCap data dictionary.
+ and arm_num data in REDCAP_EVENT_MAPPING matches your REDCap data dictionary.
 
 #### answer_mapping_table
 The answer_mapping_table must exist and be populated *before* the python code is run.
 This table is created by the sql_files/create_answer_mapping_table_oracle.sql script (Oracle only).  You 
-populate this table using either REDCAP_ANSWER_MAPPING.csv or REDCAP_ANSWER_MAPPING.sql (Oracle only).
+populate this table using either sql_files/REDCAP_ANSWER_MAPPING.csv or sql_files/REDCAP_ANSWER_MAPPING.sql (Oracle only).
 These files contain a default set of data.  After you populate the table, make sure all the form_name
- and field_name data matches your REDCap data dictionary.
+ and field_name data in REDCAP_ANSWER_MAPPING matches your REDCap data dictionary.
 
 #### patient_mapping_table
 The patient_mapping_table must exist and be populated *before* the python code is run.  
@@ -120,11 +120,10 @@ http://redi.readthedocs.org/en/latest/add_new_redcap_project.html
 
 #### load_text_fields
 A boolean indicating if you want to process all the available text fields from REDCap.  True means, write the text data to the pro_cm_table.  False means do not write
-text data to pro_cm table.     
+text data to pro_cm table.  Suggested value for this setting is ```False```.   
 
 #### verify_ssl
-A boolean indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how your REDCap server's API is configured and its firewall rules.  
-This flag is found in the third party REDCap python code.
+A boolean indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how your REDCap server's API is configured and its firewall rules.  Suggested value for this setting is ```True```.
 
 #### lazy
 A boolean indicating if the third party REDCap code should fetch data in a lazy manner.  True indicates the data from the REDCap server should only 
