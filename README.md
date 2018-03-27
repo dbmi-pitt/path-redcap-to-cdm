@@ -94,7 +94,7 @@ exist and be populated *before* the python code is run.
 
 #### patient_mapping_table
 This is the name of the patient_mapping_table in the database specified above.  The patient_mapping_table must
-exist and be populated *before* the python code is run.  .
+exist and be populated *before* the python code is run.  
 You must map the REDCap record_id values to your PATID in your CDM DEMOGRAPHIC table.
 
 #### pro_cm_table
@@ -120,7 +120,7 @@ http://redi.readthedocs.org/en/latest/add_new_redcap_project.html
 
 #### load_text_fields
 A boolean indicating if you want to process all the available text fields from REDCap.  True means, write the text data to the pro_cm_table.  False means do not write
-text data to pro_cm_table.     
+text data to pro_cm table.     
 
 #### verify_ssl
 A boolean indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how your REDCap server's API is configured and its firewall rules.  

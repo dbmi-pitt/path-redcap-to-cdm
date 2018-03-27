@@ -12,24 +12,49 @@ sid =
 # for SQL Server only
 dbname = 
 
+# This is the name of the event_mapping_table in the database specified above.  The event_mapping_table must
+# exist and be populated *before* the python code is run.  
 event_mapping_table = REDCAP_EVENT_MAPPING
+
+# This is the name of the answer_mapping_table in the database specified above.  The answer_mapping_table must
+# exist and be populated *before* the python code is run.  
 answer_mapping_table = REDCAP_ANSWER_MAPPING
+
+# This is the name of the patient_mapping_table in the database specified above.  The patient_mapping_table must
+# exist and be populated *before* the python code is run.  
+# You must map the REDCap record_id values to your PATID in your CDM DEMOGRAPHIC table.
 patient_mapping_table = REDCAP_PATIENT_MAPPING
-pro_cm_table = PRO_CM_TEST
+
+# This is the name of the CDM 4.0 PRO_CM table in your CDM schema.  It should be called 'PRO_CM'.  The data from the python 
+# scripts will be written to this table.
+pro_cm_table = PRO_CM
 
  
 [REDCAP]
+# Change the api_url variable to your REDCap API URL.  It is most likely your REDCap web address plus '/api/'.  For example: 
+# 'https://www.redcap-servername.myinstitution.edu/redcap/api/'
 api_url = https://server.edu/redcap/api/
-               
+    
+# The config.ini file contains an array called redcap_project_info.  This array contains entries for the REDCap projects.
+# For each project supply the following information: site_project_id and api_key.                 
 redcap_project_info = [{'project_name': 'IPF', 'api_key':'11111111111111111111111111111111','site_project_id':'2000','path_project_id':'1000'},
                        {'project_name': 'A Fib', 'api_key':'22222222222222222222222222222222','site_project_id':'2001','path_project_id':'1001'},
                        {'project_name': 'Weight', 'api_key':'33333333333333333333333333333333','site_project_id':'2002','path_project_id':'1002'}] 
 
+# A True/False setting indicating if you want to process all the available text fields from REDCap.  True means, write the text data to 
+# the pro_cm_table.  False means do not write text data to pro_cm table.  NOTE: Date text fields are always written to the pro_cm table.       
 load_text_fields = False
 
+# A True/False setting indicating whether or not to contact the REDCap server via an SSL socket.  True indicates the REDCap 
+# server is contacted via an SSL socket.  False indicates the REDCap server is not accessed via SSL.  This flag depends on how
+# your REDCap server's API is configured and its firewall rules.  
 verify_ssl=True
+
+# A True/False setting  indicating if the third party REDCap code should fetch data in a lazy manner.  True indicates the data
+# from the REDCap server should only load the minimal amount of data with each call to the server.  False indicates the server
+# should load all the information with each call.  Suggested value for this setting is 'False'. 
 lazy=False
 
-#Set the logging level to one of these options: ERROR, WARNING, INFO, DEBUG
+# Set the logging level to one of these options: ERROR, WARNING, INFO, DEBUG
 logging_level=ERROR
 
