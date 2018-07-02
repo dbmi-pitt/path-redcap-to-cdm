@@ -10,7 +10,7 @@ and loads them into PCORI CDM 4.1.  It performs three overall tasks:
 **NOTE: The PaTH project adds three columns to the CDM 4.1 PRO_CM table:**
 - EVENT_CODE VARCHAR2(50) this column contains the event_name data extracted from REDCap.  The data in this column will be extracted from the event_mapping_table (see below).
 - PATH_CODE VARCHAR2(100) this column contains customized codes that the PaTH Network uses to maintain a crosswalk across survey elements throughout the PaTH Network.  These codes include survey elements not explicitly collected by the PCORI CDM.  The data in this column will be extracted from the answer_mapping_table (see below).
-- PRO_RESPONSE_DATE TIMESTAMP(0) this column records survey questions which collect date responses (as opposed to text or numeric fields).  You can designate certain fields as containing dates in the answer_mapping_table.
+- PRO_RESPONSE_DATE TIMESTAMP(0) this column records survey questions which collect date responses (as opposed to text or numeric fields).  You can designate date response fields in the answer_mapping_table.
 
 # Installation Steps
 ---
