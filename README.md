@@ -1,11 +1,15 @@
 # Code Overview
 ---
 The REDCap python code for the PaTH project extracts patient responses stored in REDCap
-and loads them into PCORI CDM 4.0.  It performs three overall tasks:
+and loads them into PCORI CDM 4.1.  It performs three overall tasks:
 
 1.  Maps REDCap patient identifiers to their CDM PATID using a pre-existing patient mapping table
 2.  Connects to REDCap server (using configuration data from config.ini) and extracts the survey data
-3.  Writes the survey data into the PRO_CM CDM 4.0 table
+3.  Writes the survey data into the PRO_CM CDM 4.1 table
+**NOTE: The PaTH project adds three columns to the CDM 4.1 PRO_CM table:**
+- EVENT_CODE VARCHAR2(50) this column contains the event_name data extracted from REDCap.  The data in this column will be extracted from the event_mapping_table (see below).
+- PATH_CODE VARCHAR2(100) this column contains customized codes that the PaTH Network uses to maintain a crosswalk across survey elements throughout the PaTH Network.  These codes include survey elements not explicitly collected by the PCORI CDM.  The data in this column will be extracted from the answer_mapping_table (see below).
+- PRO_RESPONSE_DATE TIMESTAMP(0) this column records survey questions which collect date responses (as opposed to text or numeric fields).  You can designate certain fields as containing dates in the answer_mapping_table.
 
 # Installation Steps
 ---
@@ -47,7 +51,7 @@ This table is created by the sql_files/create_redcap_patient_mapping_table_oracl
 You must map the REDCap record_id values to your PATID in your CDM DEMOGRAPHIC table.
 
 #### pro_cm_table
-This is the name of the CDM 4.0 PRO_CM table in your CDM schema.  Typically this is 'PRO_CM'.  The data from the python scripts 
+This is the name of the CDM 4.1 PRO_CM table in your CDM schema.  Typically this is 'PRO_CM'.  The data from the python scripts 
 will be written to this table.  This table is created by the sql_files/create_pro_cm_table_oracle.sql script (Oracle only).
 
 ## config.ini
