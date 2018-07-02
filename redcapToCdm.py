@@ -60,6 +60,9 @@ pro_measure_seq = 0
 #     "Change: The API method 'Export Instrument-Event Mappings' now returns a different structure if exporting as JSON or XML" 
 redcap_new_api_version = "6.11.2"
 
+# this variable maintains a list of the mapping issues that occur during processing
+lstMappingIssues = []
+
 def loadConfigFile():
     """Open the configuration file and load the contents
     
@@ -265,8 +268,12 @@ def loadCodesByFormDatabase(dbobj, projectid, formname, redcapProject):
             # replace 'ANSWERED' with 'NORESPONSE'            
             field_name = str(row[0])
             if redcapFields.has_key(field_name) == False:
-                msg = "REDCAP_ANSWER_MAPPING error.  Unable to find a field named {0} in REDCap formname {1} for project {2}.".format(field_name, formname, projectid)
-                logging.info(msg)
+                # add the error to an array for export at the end of the processing
+                tupError = ( projectid, formname, field_name)
+                if lstMappingIssues.count(tupError) == 0:
+                    lstMappingIssues.append(tupError)
+                #msg = "REDCAP_ANSWER_MAPPING error.  Unable to find a field named {0} in REDCap formname {1} for project {2}.".format(field_name, formname, projectid)
+                #logging.info(msg)
                 continue
             redcapFieldInfo = redcapFields[field_name]
             field_type = redcapFieldInfo['field_type']
@@ -587,6 +594,12 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
                     dictCDMRecord['pro_response_text'] = cleanText(fieldItem['field_value'])
                 else:
                     dictCDMRecord['pro_response_date'] = extractDate(fieldItem['field_value'])
+                    # check to see if the Date was successfully parsed
+                    # if not, update the path_code to reflect the unparseable date
+                    if dictCDMRecord['pro_response_date'] == None:
+                        dictCDMRecord['path_code'] = str(dictCDMRecord['path_code']).replace('ANSWERED', 'UNPARSEABLE_DATE')
+                        #reset the value to None
+                        dictCDMRecord['pro_response_date'] = None
             # handle situation where the participant did not respond
             elif dictCDMRecord.has_key('path_code') == False:
                 dictCDMRecord['path_code'] = str(answerMap['concept_code'])
@@ -697,4 +710,9 @@ if __name__ == "__main__":
         etlProject(dbobj, project_info)
         logging.info('Finished ETL for Project: {0}'.format(project_info['project_name']))
     
+    # Process any mapping errors
+    if len(lstMappingIssues) > 0:
+        for tupIssue in lstMappingIssues:
+            msg = "REDCAP_ANSWER_MAPPING error.  Unable to find a field named {0} in REDCap formname {1} for project {2}.".format(tupIssue[2], tupIssue[1], tupIssue[0])
+            logging.info(msg)
 
