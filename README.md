@@ -6,6 +6,7 @@ and loads them into PCORI CDM 4.1.  It performs three overall tasks:
 1.  Maps REDCap patient identifiers to their CDM PATID using a pre-existing patient mapping table
 2.  Connects to REDCap server (using configuration data from config.ini) and extracts the survey data
 3.  Writes the survey data into the PRO_CM CDM 4.1 table
+
 **NOTE: The PaTH project adds three columns to the CDM 4.1 PRO_CM table:**
 - EVENT_CODE VARCHAR2(50) this column contains the event_name data extracted from REDCap.  The data in this column will be extracted from the event_mapping_table (see below).
 - PATH_CODE VARCHAR2(100) this column contains customized codes that the PaTH Network uses to maintain a crosswalk across survey elements throughout the PaTH Network.  These codes include survey elements not explicitly collected by the PCORI CDM.  The data in this column will be extracted from the answer_mapping_table (see below).
