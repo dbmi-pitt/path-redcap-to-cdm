@@ -63,6 +63,9 @@ redcap_new_api_version = "6.11.2"
 # this variable maintains a list of the mapping issues that occur during processing
 lstMappingIssues = []
 
+# this variable maintains a count of the forms skipped during processing
+cntFormsSkipped = 0
+
 def loadConfigFile():
     """Open the configuration file and load the contents
     
@@ -413,7 +416,8 @@ def loadResponses(dbobj, listResponses, dictFormAnswerMap):
     """
     for response in listResponses:
         singleFormData = transformSinglePatientFormData(dbobj, response, dictFormAnswerMap)
-        writeCDMData(dbobj, singleFormData)
+        if singleFormData is not None:
+            writeCDMData(dbobj, singleFormData)
 
 def writeCDMData(dbobj, listCDMData):
     for dataItem in listCDMData:
@@ -531,8 +535,22 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
     pro_cat = 'NI'
     pro_method = 'NI'
 
+    
+    pro_datetimestamp = None
+    # try to extract the form's timestamp.  If it cannot be determined, skip the form.
+    # Rationale: we contacted PCORI about this.  Their data model has a NOT NULL
+    # requirement on the PRO_DATE column.  Therefore, we cannot supply a null value.
+    # We also do not want to create a bogus date to satisfy the constraint.  Therefore,
+    # skip the form entirely for now.
     pro_datetimestamp = stringToDateTime(dictFormResponse['form_timestamp'])
-    #pro_time = stringToDateTime(dictFormResponse['form_timestamp'])[1]
+    if pro_datetimestamp is None:
+        #msg = "Error converting REDCap timestamp {0}.  Error {1}".format(dictFormResponse['form_timestamp'], e)
+        #logging.error(msg)
+        global cntFormsSkipped
+        cntFormsSkipped = cntFormsSkipped + 1
+        return
+    
+    
     
     global pro_measure_seq
     pro_measure_seq = pro_measure_seq + 1
@@ -624,24 +642,22 @@ def getCodeForDataItem(fieldname, fielddata):
 
 def stringToDateTime(timestamp):
     """Convert a REDCap date time string to a python datetime object.
-    If the timestamp is not a valid date time, return today's date time.
+    If the timestamp is not a valid date time, return None.
 
     Args:
         timestamp: A string representing the REDCap date time format (ex: 5-14-2015  2:52:44 PM).
         
     Returns:
-        A python datetime object.  If one cannot be extracted from the timestamp, today's timestamp is returned.
+        A python datetime object.  If one cannot be extracted from the timestamp, return None.
         The CDM specification requires a date in the PRO_CM table.
     """    
-    dtReturn = datetime.datetime.now()
+    dtReturn = None
     if timestamp == None or len(timestamp) == 0:
-        return dtReturn
+        return None
     try:
         dtReturn = datetime.datetime.strptime(timestamp, '%Y-%m-%d %H:%M:%S')
     except Exception as e:
-        msg = "Error converting REDCap timestamp {0}.  Error {1}".format(timestamp, e)
-        logging.error(msg)
-        return datetime.datetime.now()
+        return None
     
     return dtReturn
 
@@ -707,7 +723,12 @@ if __name__ == "__main__":
     
     for project_info in redcap_project_info:
         logging.info('Starting ETL for Project: {0}'.format(project_info['project_name']))
+        global cntFormsSkipped
+        cntFormsSkipped = 0
         etlProject(dbobj, project_info)
+        if cntFormsSkipped > 0:
+            msg = "Skipped {0} forms for project {1} because of invalid form timestamps.".format(cntFormsSkipped, project_info['project_name'])
+            logging.info(msg)            
         logging.info('Finished ETL for Project: {0}'.format(project_info['project_name']))
     
     # Process any mapping errors
