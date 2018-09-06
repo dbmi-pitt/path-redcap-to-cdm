@@ -1,0 +1,8 @@
+Release 1.1
+
+For release 1.1, you need to update 2 tables: REDCAP_PATIENT_MAPPING and PRO_CM:
+
+- In REDCAP_PATIENT_MAPPING change PATID datatype from NUMBER to VARCHAR2(50).  For SQL Server, change it to VARCHAR(50).  Note: you may need to truncate the table before you change the data type.  Save the data before truncating.
+- In PRO_CM add a column called DATE_MISSING VARCHAR2(1).  For SQL Server, make the data type VARCHAR(1).
+
+The files in the sql_files directory incorporate these changes.
