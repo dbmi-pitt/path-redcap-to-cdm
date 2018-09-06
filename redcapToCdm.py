@@ -543,12 +543,17 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
     # We also do not want to create a bogus date to satisfy the constraint.  Therefore,
     # skip the form entirely for now.
     pro_datetimestamp = stringToDateTime(dictFormResponse['form_timestamp'])
+    date_missing = 'F'
     if pro_datetimestamp is None:
         #msg = "Error converting REDCap timestamp {0}.  Error {1}".format(dictFormResponse['form_timestamp'], e)
         #logging.error(msg)
-        global cntFormsSkipped
-        cntFormsSkipped = cntFormsSkipped + 1
-        return
+        #global cntFormsSkipped
+        #cntFormsSkipped = cntFormsSkipped + 1
+        #return
+        # If a timestamp is missing, set the date_missing field to True
+        # and set the current datetime to Jan 1, 1900 @ 12 noon
+        date_missing = 'T'
+        pro_datetimestamp = datetime.datetime(1900, 1, 1, 12, 00)
     
     
     
@@ -571,6 +576,7 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
         dictCDMRecord['pro_measure_seq'] = pro_measure_seq
         dictCDMRecord['event_code'] = event_code
         dictCDMRecord['pro_type'] = pro_type
+        dictCDMRecord['date_missing'] = date_missing
 
         #hardcoded values
         dictCDMRecord['pro_mode'] = pro_mode
