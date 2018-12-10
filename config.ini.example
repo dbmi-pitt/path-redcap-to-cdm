@@ -58,3 +58,6 @@ lazy=False
 # Set the logging level to one of these options: ERROR, WARNING, INFO, DEBUG
 logging_level=ERROR
 
+# Change the location of the log file.  By default, the log file is placed in the directory where redcapToCdm.py is executing.
+This setting is OPTIONAL.
+logging_directory=''

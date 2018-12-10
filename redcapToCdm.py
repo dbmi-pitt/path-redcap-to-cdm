@@ -34,7 +34,7 @@ dictDatabaseSettings = {'dbms' : None, 'host' : None, 'port' : None, 'sid': None
 #initialize a dictionary with all the variables relating to the REDCAP section
 #This allows the code to loop through the section while loading the variables into the dictionary
 dictRedcapSettings = {'api_url' : None, 'redcap_project_info' : None, 'verify_ssl' : True, 'lazy' : False, 
-                       'load_text_fields' : False, 'logging_level' : 'INFO'}
+                       'load_text_fields' : False, 'logging_level' : 'INFO', 'logging_directory': ''}
 
 # a dictionary to manage the data types found in the pro_cm table
 dictPROCMTableDataTypes = {'pro_date' : 'date', 'pro_response_num' : 'number', 'pro_measure_score' : 'number', 'pro_measure_theta' : 'number',
@@ -80,7 +80,6 @@ def loadConfigFile():
     """
     config = ConfigParser.ConfigParser()
     try:
-        logging.info("Starting loading config.ini")
         config.read('config.ini')
         for k in dictDatabaseSettings.keys():
             dictDatabaseSettings[k] = config.get('DATABASE', k)
@@ -95,6 +94,27 @@ def loadConfigFile():
         dictRedcapSettings['verify_ssl'] = bool(dictRedcapSettings['verify_ssl'])
         dictRedcapSettings['lazy'] = bool(dictRedcapSettings['lazy'])
         dictRedcapSettings['load_text_fields'] = bool(dictRedcapSettings['load_text_fields'])
+        
+        logging_directory = ''
+        if 'logging_directory' in dictRedcapSettings:
+            logging_directory = str(dictRedcapSettings['logging_directory'])
+        
+        loggingfilename = os.path.join(logging_directory, 'redcap.log.' + str(os.getpid()))
+        
+        logging.basicConfig(filename=loggingfilename,level=logging.DEBUG, format='%(asctime)s: %(levelname)s - %(message)s')
+
+        logging.info("Starting loading config.ini")
+        # define a Handler which writes INFO messages or higher to the sys.stderr
+        console = logging.StreamHandler()
+        console.setLevel(logging.DEBUG)
+        logging.getLogger('').addHandler(console)
+    
+        # suppress the extraneous HTTP messages from the logs
+        logging.getLogger("requests").setLevel(logging.WARNING)
+        logging.getLogger("urllib3").setLevel(logging.WARNING)
+        
+        today = datetime.datetime.now()
+        logging.info('Starting REDCap ETL to CDM Process: ' + today.strftime('%m/%d/%Y %I:%M'))
         level = logging.getLevelName(str(dictRedcapSettings['logging_level']))
         if level == None:
             level = logging.INFO
@@ -705,18 +725,6 @@ def etlProject(dbobj, project_info):
 if __name__ == "__main__":
     # use this command to disable the InsecurePlatformWarning (see http://stackoverflow.com/questions/29099404/ssl-insecureplatform-error-when-using-requests-package)
     requests.packages.urllib3.disable_warnings()
-    logging.basicConfig(filename='redcap.log.' + str(os.getpid()),level=logging.DEBUG, format='%(asctime)s: %(levelname)s - %(message)s')
-    # define a Handler which writes INFO messages or higher to the sys.stderr
-    console = logging.StreamHandler()
-    console.setLevel(logging.DEBUG)
-    logging.getLogger('').addHandler(console)
-
-    # suppress the extraneous HTTP messages from the logs
-    logging.getLogger("requests").setLevel(logging.WARNING)
-    logging.getLogger("urllib3").setLevel(logging.WARNING)
-    
-    today = datetime.datetime.now()
-    logging.info('Starting REDCap ETL to CDM Process: ' + today.strftime('%m/%d/%Y %I:%M'))
 
     loadConfigFile()
     if dictDatabaseSettings['dbms'] == "Oracle":
