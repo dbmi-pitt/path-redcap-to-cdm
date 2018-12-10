@@ -1,0 +1,13 @@
+Release 1.2 upgrades the requests package.  This requires re-installing the python supporting libraries.  Follow these steps:
+
+1. Download the latest path-redcap-tocdm code
+2. Using the command line, change to the directory containing requirements.txt file
+3. Run this command: pip install -r requirements.txt 
+
+The install program's output will vary but it should look something like this:
+
+Requirement already satisfied: python-dateutil==2.6.1 in /usr/local/lib/python2.7/site-packages (from -r requirements.txt (line 3)) (2.6.1)
+Requirement already satisfied: idna<2.8,>=2.5 in /usr/local/lib/python2.7/site-packages (from requests==2.20.0->-r requirements.txt (line 1)) (2.7)
+Requirement already satisfied: semantic-version==2.4.2 in /usr/local/lib/python2.7/site-packages (from -r requirements.txt (line 2)) (2.4.2)
+
+This will also contain messages listing the package(s) that are upgraded.
