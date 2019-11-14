@@ -554,6 +554,7 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
     pro_mode = 'NI'
     pro_cat = 'NI'
     pro_method = 'NI'
+    pro_source = 'SR'
 
     
     pro_datetimestamp = None
@@ -602,6 +603,7 @@ def transformSinglePatientFormData(dbobj, dictFormResponse, dictAnswerMap):
         dictCDMRecord['pro_mode'] = pro_mode
         dictCDMRecord['pro_method'] = pro_method
         dictCDMRecord['pro_cat'] = pro_cat
+        dictCDMRecord['pro_source'] = pro_source
         
         global pro_cm_id
         pro_cm_id = pro_cm_id + 1
